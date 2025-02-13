@@ -28,15 +28,17 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 100%;
             width: 100%;
-            margin: 40px auto;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-in-out;
             transition: background 0.5s ease;
+            max-width: 800px;
+            width: 100%;
         }
 
         body.dark-mode .container {
@@ -84,7 +86,9 @@
 
         .search-box {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
+            justify-content: space-between;
         }
 
         .search-box input {
@@ -95,6 +99,7 @@
             font-size: 16px;
             background: white;
             transition: all 0.3s ease;
+            min-width: 200px;
         }
 
         body.dark-mode .search-box input {
@@ -121,6 +126,7 @@
             background-position: right 1rem center;
             background-size: 1em;
             transition: all 0.3s ease;
+            min-width: 200px;
         }
 
         body.dark-mode select {
@@ -137,6 +143,7 @@
 
         .button-group {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
         }
@@ -257,19 +264,56 @@
             transform: translateY(0);
         }
 
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .container {
-                margin: 20px;
-                padding: 20px;
+        /* Responsif Desain */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
             }
-            
+
+            .search-box input, select {
+                min-width: 100%;
+            }
+
             .button-group {
                 flex-direction: column;
+                gap: 10px;
             }
-            
+
             button {
-                justify-content: center;
+                width: 100%;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .progress-container {
+                margin-top: 15px;
+            }
+
+            .loading, .error-message {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .search-box input, select {
+                min-width: 100%;
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            .progress-container {
+                margin-top: 10px;
+            }
+
+            audio {
+                margin-top: 10px;
             }
         }
     </style>

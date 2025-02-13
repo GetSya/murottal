@@ -65,18 +65,6 @@
             color: #ffffff;
         }
 
-        h1:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: #667eea;
-            border-radius: 2px;
-        }
-
         .controls {
             display: flex;
             flex-direction: column;
@@ -316,6 +304,26 @@
                 margin-top: 10px;
             }
         }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { bottom: -80px; }
+            to { bottom: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -341,7 +349,22 @@
         </div>
     </div>
 
+    <div class="notification" id="notification">
+        Website ini dibuat oleh <a href="https://instagram.com/arsrfii" target="_blank" style="color: #67c1f5;">@arsrfii</a>
+    </div>
+
     <script>
+        const notification = document.getElementById("notification");
+
+        window.onload = function() {
+            setTimeout(function() {
+                notification.style.display = "block";
+            }, 500); // Menampilkan setelah 0.5 detik
+            setTimeout(function() {
+                notification.style.display = "none";
+            }, 5000); // Menyembunyikan setelah 5 detik
+        };
+
         const surahSelect = document.getElementById("surahSelect");
         const audioPlayer = document.getElementById("audioPlayer");
         const errorMessage = document.getElementById("errorMessage");
@@ -353,12 +376,6 @@
         // Mode Gelap/Terang
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
-            const darkModeButton = document.querySelector(".dark-mode-toggle");
-            if (document.body.classList.contains("dark-mode")) {
-                darkModeButton.textContent = "☀️";
-            } else {
-                darkModeButton.textContent = "🌙";
-            }
         }
 
         // Memuat data surah
@@ -415,41 +432,35 @@
         function downloadMurottal() {
             const selectedSurah = surahSelect.value;
             const audioUrl = getMurottalURL(selectedSurah);
-            
-            if (audioUrl) {
-                const link = document.createElement("a");
-                link.href = audioUrl;
-                link.setAttribute("download", `Surah_${selectedSurah}.mp3`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                hideError();
-            } else {
-                showError("Murottal tidak tersedia untuk surah ini");
-            }
+            const link = document.createElement('a');
+            link.href = audioUrl;
+            link.download = `murottal-surah-${selectedSurah}.mp3`;
+            link.click();
         }
 
-        // Update progress bar
+        // Memperbarui progress bar
         function updateProgressBar() {
-            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            progressBar.style.width = `${progress}%`;
+            const duration = audioPlayer.duration;
+            const currentTime = audioPlayer.currentTime;
+            const progress = (currentTime / duration) * 100;
+            progressBar.style.width = progress + "%";
         }
 
-        // Menampilkan pesan error
+        // Mendapatkan URL murottal dari API
+        function getMurottalURL(surahNumber) {
+            const baseURL = "https://api.alquran.cloud/v1/surah";
+            return `${baseURL}/${surahNumber}/ar.alafasy`;
+        }
+
+        // Menampilkan pesan kesalahan
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
         }
 
-        // Menyembunyikan pesan error
+        // Menyembunyikan pesan kesalahan
         function hideError() {
             errorMessage.style.display = 'none';
-        }
-
-        // Mendapatkan URL murottal
-        function getMurottalURL(surahNumber) {
-            const selectedSurah = surahData.find(surah => surah.number_of_surah == surahNumber);
-            return selectedSurah ? selectedSurah.recitation : null;
         }
     </script>
 </body>
